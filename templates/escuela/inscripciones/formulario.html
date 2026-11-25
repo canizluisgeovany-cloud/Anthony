@@ -1,0 +1,71 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>INTECAP | Inscripciones</title>
+    <link rel="stylesheet" href="{% static 'css/alumnos.css' %}">
+</head>
+<body>
+
+    <aside class="sidebar">
+        <h2>INTECAP</h2>
+        <p>Sistema de Gestión</p>
+
+        <nav>
+            <a href="{% url 'dashboard' %}">Dashboard</a>
+            <a href="{% url 'alumno_lista' %}">Alumnos</a>
+            <a href="{% url 'maestro_lista' %}">Maestros</a>
+            <a href="{% url 'personal_lista' %}">Personal</a>
+            <a href="{% url 'aula_lista' %}">Aulas</a>
+            <a href="{% url 'curso_lista' %}">Cursos</a>
+            <a href="{% url 'inscripcion_lista' %}" class="active">Inscripciones</a>
+            <a href="#">Asistencia</a>
+        </nav>
+
+        <form method="POST" action="{% url 'logout' %}">
+            {% csrf_token %}
+            <button type="submit">Cerrar sesión</button>
+        </form>
+    </aside>
+
+    <main class="content">
+        <header>
+            <div>
+                <h1>{{ titulo }}</h1>
+                <p>Completa los datos de la inscripción.</p>
+            </div>
+        </header>
+
+        <section class="table-container">
+            <form method="POST">
+                {% csrf_token %}
+
+                {% for campo in form %}
+                    <div class="form-group">
+                        <label for="{{ campo.id_for_label }}">
+                            {{ campo.label }}
+                        </label>
+
+                        {{ campo }}
+
+                        {% if campo.errors %}
+                            <small>{{ campo.errors }}</small>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+
+                <button type="submit" class="btn-add">
+                    Guardar inscripción
+                </button>
+
+                <a href="{% url 'inscripcion_lista' %}">
+                    Cancelar
+                </a>
+            </form>
+        </section>
+    </main>
+
+</body>
+</html>

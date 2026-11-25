@@ -1,0 +1,67 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>INTECAP | Eliminar inscripción</title>
+    <link rel="stylesheet" href="{% static 'css/alumnos.css' %}">
+</head>
+<body>
+
+    <aside class="sidebar">
+        <h2>INTECAP</h2>
+        <p>Sistema de Gestión</p>
+
+        <nav>
+            <a href="{% url 'dashboard' %}">Dashboard</a>
+            <a href="{% url 'alumno_lista' %}">Alumnos</a>
+            <a href="{% url 'maestro_lista' %}">Maestros</a>
+            <a href="{% url 'personal_lista' %}">Personal</a>
+            <a href="{% url 'aula_lista' %}">Aulas</a>
+            <a href="{% url 'curso_lista' %}">Cursos</a>
+            <a href="{% url 'inscripcion_lista' %}" class="active">Inscripciones</a>
+            <a href="#">Asistencia</a>
+        </nav>
+
+        <form method="POST" action="{% url 'logout' %}">
+            {% csrf_token %}
+            <button type="submit">Cerrar sesión</button>
+        </form>
+    </aside>
+
+    <main class="content">
+        <header>
+            <div>
+                <h1>Eliminar inscripción</h1>
+                <p>Confirma si deseas eliminar este registro.</p>
+            </div>
+        </header>
+
+        <section class="table-container">
+            <h3>¿Estás seguro de eliminar esta inscripción?</h3>
+
+            <p>
+                Alumno: {{ inscripcion.alumno }}
+            </p>
+
+            <p>
+                Curso: {{ inscripcion.curso }}
+            </p>
+
+            <form method="POST">
+                {% csrf_token %}
+
+                <button type="submit" class="delete">
+                    Sí, eliminar
+                </button>
+
+                <a href="{% url 'inscripcion_lista' %}">
+                    Cancelar
+                </a>
+            </form>
+        </section>
+    </main>
+
+</body>
+</html>

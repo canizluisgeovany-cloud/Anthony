@@ -1,0 +1,131 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>INTECAP | Personal</title>
+    <link rel="stylesheet" href="{% static 'css/alumnos.css' %}">
+</head>
+<body>
+
+    <aside class="sidebar">
+        <h2>INTECAP</h2>
+        <p>Sistema de Gestión</p>
+
+        <nav>
+            <a href="{% url 'dashboard' %}">Dashboard</a>
+            <a href="{% url 'alumno_lista' %}">Alumnos</a>
+            <a href="{% url 'maestro_lista' %}">Maestros</a>
+            <a href="{% url 'personal_lista' %}" class="active">Personal</a>
+            <a href="{% url 'aula_lista' %}">Aulas</a>
+            <a href="{% url 'curso_lista' %}">Cursos</a>
+            <a href="{% url 'inscripcion_lista' %}" class="active">Inscripciones</a>
+           <a href="{% url 'asistencia_lista' %}" class="active">Asistencia</a>
+        </nav>
+
+        <form method="POST" action="{% url 'logout' %}">
+            {% csrf_token %}
+            <button type="submit">Cerrar sesión</button>
+        </form>
+    </aside>
+
+    <main class="content">
+
+        <header>
+            <div>
+                <h1>Gestión de Personal</h1>
+                <p>Administra el personal de INTECAP.</p>
+            </div>
+
+            <a href="{% url 'personal_crear' %}" class="btn-add">
+                + Nuevo personal
+            </a>
+        </header>
+
+        <section class="table-container">
+
+            <form method="GET" class="search">
+                <input
+                    type="text"
+                    name="buscar"
+                    placeholder="Buscar personal..."
+                    value="{{ buscar }}"
+                >
+                <button type="submit">Buscar</button>
+                <a href="{% url 'personal_lista' %}">Limpiar</a>
+            </form>
+
+            <div class="table-scroll">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Código</th>
+                            <th>Nombres</th>
+                            <th>Apellidos</th>
+                            <th>Cargo</th>
+                            <th>Teléfono</th>
+                            <th>Correo</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for persona in personal %}
+                        <tr>
+                            <td>{{ persona.codigo }}</td>
+                            <td>{{ persona.nombres }}</td>
+                            <td>{{ persona.apellidos }}</td>
+                            <td>{{ persona.cargo }}</td>
+                            <td>{{ persona.telefono|default:"-" }}</td>
+                            <td>{{ persona.correo|default:"-" }}</td>
+                            <td>
+                                {% if persona.activo %}
+                                    <span class="estado">Activo</span>
+                                {% else %}
+                                    Inactivo
+                                {% endif %}
+                            </td>
+                            <td class="acciones">
+                                <a href="{% url 'personal_editar' persona.pk %}">
+                                    Editar
+                                </a>
+
+                                <a class="delete"
+                                   href="{% url 'personal_eliminar' persona.pk %}">
+                                    Eliminar
+                                </a>
+                            </td>
+                        </tr>
+
+                        {% empty %}
+                        <tr>
+                            <td colspan="8">No hay personal registrado.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="pagination">
+                {% if personal.has_previous %}
+                    <a href="?buscar={{ buscar|urlencode }}&page=1">Primera</a>
+                    <a href="?buscar={{ buscar|urlencode }}&page={{ personal.previous_page_number }}">Anterior</a>
+                {% endif %}
+
+                <span>
+                    Página {{ personal.number }} de {{ personal.paginator.num_pages }}
+                </span>
+
+                {% if personal.has_next %}
+                    <a href="?buscar={{ buscar|urlencode }}&page={{ personal.next_page_number }}">Siguiente</a>
+                    <a href="?buscar={{ buscar|urlencode }}&page={{ personal.paginator.num_pages }}">Última</a>
+                {% endif %}
+            </div>
+
+        </section>
+    </main>
+
+</body>
+</html>

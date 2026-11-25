@@ -1,0 +1,22 @@
+{
+	"folders": [
+		{
+			"path": "../../config"
+		},
+		{
+			"path": "../../escuela"
+		},
+		{
+			"path": "../../startic"
+		},
+		{
+			"path": "../../static"
+		},
+		{
+			"path": ".."
+		},
+		{
+			"path": "../../venv"
+		}
+	]
+}

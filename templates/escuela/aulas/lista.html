@@ -1,0 +1,120 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>INTECAP | Aulas</title>
+    <link rel="stylesheet" href="{% static 'css/alumnos.css' %}">
+</head>
+<body>
+
+    <aside class="sidebar">
+        <h2>INTECAP</h2>
+        <p>Sistema de Gestión</p>
+
+        <nav>
+            <a href="{% url 'dashboard' %}">Dashboard</a>
+            <a href="{% url 'alumno_lista' %}">Alumnos</a>
+            <a href="{% url 'maestro_lista' %}">Maestros</a>
+            <a href="{% url 'personal_lista' %}">Personal</a>
+            <a href="{% url 'aula_lista' %}" class="active">Aulas</a>
+            <a href="{% url 'curso_lista' %}">Cursos</a>
+            <a href="{% url 'inscripcion_lista' %}" class="active">Inscripciones</a>
+            <a href="{% url 'asistencia_lista' %}" class="active">Asistencia</a>
+        </nav>
+
+        <form method="POST" action="{% url 'logout' %}">
+            {% csrf_token %}
+            <button type="submit">Cerrar sesión</button>
+        </form>
+    </aside>
+
+    <main class="content">
+
+        <header>
+            <div>
+                <h1>Gestión de Aulas</h1>
+                <p>Administra los salones de INTECAP.</p>
+            </div>
+
+            <a href="{% url 'aula_crear' %}" class="btn-add">
+                + Nueva aula
+            </a>
+        </header>
+
+        <section class="table-container">
+
+            <form method="GET" class="search">
+                <input
+                    type="text"
+                    name="buscar"
+                    placeholder="Buscar aula..."
+                    value="{{ buscar }}"
+                >
+                <button type="submit">Buscar</button>
+                <a href="{% url 'aula_lista' %}">Limpiar</a>
+            </form>
+
+            <div class="table-scroll">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Ubicación</th>
+                            <th>Capacidad</th>
+                            <th>Descripción</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for aula in aulas %}
+                        <tr>
+                            <td>{{ aula.nombre }}</td>
+                            <td>{{ aula.ubicacion }}</td>
+                            <td>{{ aula.capacidad }}</td>
+                            <td>{{ aula.descripcion|default:"-" }}</td>
+
+                            <td class="acciones">
+                                <a href="{% url 'aula_editar' aula.pk %}">
+                                    Editar
+                                </a>
+
+                                <a class="delete"
+                                   href="{% url 'aula_eliminar' aula.pk %}">
+                                    Eliminar
+                                </a>
+                            </td>
+                        </tr>
+
+                        {% empty %}
+                        <tr>
+                            <td colspan="5">No hay aulas registradas.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="pagination">
+                {% if aulas.has_previous %}
+                    <a href="?buscar={{ buscar|urlencode }}&page=1">Primera</a>
+                    <a href="?buscar={{ buscar|urlencode }}&page={{ aulas.previous_page_number }}">Anterior</a>
+                {% endif %}
+
+                <span>
+                    Página {{ aulas.number }} de {{ aulas.paginator.num_pages }}
+                </span>
+
+                {% if aulas.has_next %}
+                    <a href="?buscar={{ buscar|urlencode }}&page={{ aulas.next_page_number }}">Siguiente</a>
+                    <a href="?buscar={{ buscar|urlencode }}&page={{ aulas.paginator.num_pages }}">Última</a>
+                {% endif %}
+            </div>
+
+        </section>
+    </main>
+
+</body>
+</html>

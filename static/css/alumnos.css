@@ -1,0 +1,196 @@
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #f1f5f9;
+    display: flex;
+    color: #243447;
+}
+
+.sidebar {
+    width: 250px;
+    min-height: 100vh;
+    background: #123456;
+    padding: 25px 18px;
+    color: white;
+    flex-shrink: 0;
+}
+
+.sidebar h2 {
+    color: #55b9ed;
+    font-size: 28px;
+}
+
+.sidebar p {
+    color: #cbd5e1;
+    margin: 10px 0 30px;
+}
+
+.sidebar nav a {
+    display: block;
+    padding: 14px;
+    margin-bottom: 5px;
+    color: white;
+    text-decoration: none;
+    border-radius: 6px;
+}
+
+.sidebar nav a:hover,
+.sidebar nav a.active {
+    background: #24547d;
+}
+
+.sidebar button {
+    width: 100%;
+    padding: 12px;
+    margin-top: 30px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.content {
+    padding: 35px;
+    width: 100%;
+    min-width: 0;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+header h1 {
+    color: #123456;
+    margin-bottom: 8px;
+}
+
+header p {
+    color: #64748b;
+}
+
+.btn-add {
+    background: #1769aa;
+    color: white;
+    text-decoration: none;
+    padding: 13px 18px;
+    border-radius: 7px;
+    white-space: nowrap;
+}
+
+.btn-add:hover {
+    background: #105286;
+}
+
+.table-container {
+    background: white;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 3px 12px rgba(0,0,0,.05);
+}
+
+.search {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 25px;
+    flex-wrap: wrap;
+}
+
+.search input {
+    flex: 1;
+    min-width: 180px;
+    padding: 12px;
+    border: 1px solid #d5dce5;
+    border-radius: 6px;
+}
+
+.search button {
+    padding: 12px 20px;
+    background: #1769aa;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.search a {
+    padding: 12px;
+    color: #1769aa;
+    text-decoration: none;
+}
+
+.table-scroll {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 750px;
+}
+
+th, td {
+    padding: 14px;
+    text-align: left;
+    border-bottom: 1px solid #e5eaf0;
+}
+
+th {
+    background: #f1f5f9;
+    color: #123456;
+}
+
+.estado {
+    color: #16834a;
+    font-weight: bold;
+}
+
+.acciones a {
+    margin-right: 10px;
+    color: #1769aa;
+    text-decoration: none;
+}
+
+.acciones .delete {
+    color: #dc3545;
+}
+
+.pagination {
+    display: flex;
+    gap: 15px;
+    margin-top: 25px;
+    align-items: center;
+}
+
+.pagination a {
+    color: #1769aa;
+    text-decoration: none;
+}
+
+@media (max-width: 750px) {
+    body {
+        display: block;
+    }
+
+    .sidebar {
+        width: 100%;
+        min-height: auto;
+    }
+
+    .content {
+        padding: 18px;
+    }
+
+    header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+}

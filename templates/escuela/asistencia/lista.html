@@ -1,0 +1,122 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>INTECAP | Asistencia</title>
+    <link rel="stylesheet" href="{% static 'css/alumnos.css' %}">
+</head>
+<body>
+
+    <aside class="sidebar">
+        <h2>INTECAP</h2>
+        <p>Sistema de Gestión</p>
+
+        <nav>
+            <a href="{% url 'dashboard' %}">Dashboard</a>
+            <a href="{% url 'alumno_lista' %}">Alumnos</a>
+            <a href="{% url 'maestro_lista' %}">Maestros</a>
+            <a href="{% url 'personal_lista' %}">Personal</a>
+            <a href="{% url 'aula_lista' %}">Aulas</a>
+            <a href="{% url 'curso_lista' %}">Cursos</a>
+            <a href="{% url 'inscripcion_lista' %}">Inscripciones</a>
+            <a href="{% url 'asistencia_lista' %}" class="active">Asistencia</a>
+        </nav>
+
+        <form method="POST" action="{% url 'logout' %}">
+            {% csrf_token %}
+            <button type="submit">Cerrar sesión</button>
+        </form>
+    </aside>
+
+    <main class="content">
+
+        <header>
+            <div>
+                <h1>Control de Asistencia</h1>
+                <p>Administra la asistencia de los alumnos de INTECAP.</p>
+            </div>
+
+            <a href="{% url 'asistencia_crear' %}" class="btn-add">
+                + Registrar asistencia
+            </a>
+        </header>
+
+        <section class="table-container">
+
+            <form method="GET" class="search">
+                <input
+                    type="text"
+                    name="buscar"
+                    placeholder="Buscar alumno o curso..."
+                    value="{{ buscar }}"
+                >
+                <button type="submit">Buscar</button>
+                <a href="{% url 'asistencia_lista' %}">Limpiar</a>
+            </form>
+
+            <div class="table-scroll">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Alumno</th>
+                            <th>Curso</th>
+                            <th>Fecha</th>
+                            <th>Estado</th>
+                            <th>Observaciones</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for asistencia in asistencias %}
+                        <tr>
+                            <td>{{ asistencia.alumno }}</td>
+                            <td>{{ asistencia.curso }}</td>
+                            <td>{{ asistencia.fecha }}</td>
+                            <td>{{ asistencia.estado }}</td>
+                            <td>{{ asistencia.observaciones|default:"-" }}</td>
+
+                            <td class="acciones">
+                                <a href="{% url 'asistencia_editar' asistencia.pk %}">
+                                    Editar
+                                </a>
+
+                                <a class="delete" href="{% url 'asistencia_eliminar' asistencia.pk %}">
+                                    Eliminar
+                                </a>
+                            </td>
+                        </tr>
+
+                        {% empty %}
+                        <tr>
+                            <td colspan="6">No hay asistencias registradas.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="pagination">
+                {% if asistencias.has_previous %}
+                    <a href="?buscar={{ buscar|urlencode }}&page=1">Primera</a>
+                    <a href="?buscar={{ buscar|urlencode }}&page={{ asistencias.previous_page_number }}">Anterior</a>
+                {% endif %}
+
+                <span>
+                    Página {{ asistencias.number }} de {{ asistencias.paginator.num_pages }}
+                </span>
+
+                {% if asistencias.has_next %}
+                    <a href="?buscar={{ buscar|urlencode }}&page={{ asistencias.next_page_number }}">Siguiente</a>
+                    <a href="?buscar={{ buscar|urlencode }}&page={{ asistencias.paginator.num_pages }}">Última</a>
+                {% endif %}
+            </div>
+
+        </section>
+    </main>
+
+</body>
+</html>

@@ -1,0 +1,130 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>INTECAP | Maestros</title>
+    <link rel="stylesheet" href="{% static 'css/alumnos.css' %}">
+</head>
+<body>
+
+    <aside class="sidebar">
+        <h2>INTECAP</h2>
+        <p>Sistema de Gestión</p>
+
+        <nav>
+            <a href="{% url 'dashboard' %}">Dashboard</a>
+            <a href="{% url 'alumno_lista' %}">Alumnos</a>
+            <a href="{% url 'maestro_lista' %}" class="active">Maestros</a>
+            <a href="{% url 'personal_lista' %}">Personal</a>
+            <a href="{% url 'curso_lista' %}">Cursos</a>
+            <a href="{% url 'inscripcion_lista' %}" class="active">Inscripciones</a>
+            <a href="{% url 'asistencia_lista' %}" class="active">Asistencia</a>
+        </nav>
+
+        <form method="POST" action="{% url 'logout' %}">
+            {% csrf_token %}
+            <button type="submit">Cerrar sesión</button>
+        </form>
+    </aside>
+
+    <main class="content">
+
+        <header>
+            <div>
+                <h1>Gestión de Maestros</h1>
+                <p>Administra los maestros de INTECAP.</p>
+            </div>
+
+            <a href="{% url 'maestro_crear' %}" class="btn-add">
+                + Nuevo maestro
+            </a>
+        </header>
+
+        <section class="table-container">
+
+            <form method="GET" class="search">
+                <input
+                    type="text"
+                    name="buscar"
+                    placeholder="Buscar maestro..."
+                    value="{{ buscar }}"
+                >
+                <button type="submit">Buscar</button>
+                <a href="{% url 'maestro_lista' %}">Limpiar</a>
+            </form>
+
+            <div class="table-scroll">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Código</th>
+                            <th>Nombres</th>
+                            <th>Apellidos</th>
+                            <th>Especialidad</th>
+                            <th>Teléfono</th>
+                            <th>Correo</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for maestro in maestros %}
+                        <tr>
+                            <td>{{ maestro.codigo }}</td>
+                            <td>{{ maestro.nombres }}</td>
+                            <td>{{ maestro.apellidos }}</td>
+                            <td>{{ maestro.especialidad }}</td>
+                            <td>{{ maestro.telefono|default:"-" }}</td>
+                            <td>{{ maestro.correo|default:"-" }}</td>
+                            <td>
+                                {% if maestro.activo %}
+                                    <span class="estado">Activo</span>
+                                {% else %}
+                                    Inactivo
+                                {% endif %}
+                            </td>
+                            <td class="acciones">
+                                <a href="{% url 'maestro_editar' maestro.pk %}">
+                                    Editar
+                                </a>
+
+                                <a class="delete"
+                                   href="{% url 'maestro_eliminar' maestro.pk %}">
+                                    Eliminar
+                                </a>
+                            </td>
+                        </tr>
+
+                        {% empty %}
+                        <tr>
+                            <td colspan="8">No hay maestros registrados.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="pagination">
+                {% if maestros.has_previous %}
+                    <a href="?buscar={{ buscar|urlencode }}&page=1">Primera</a>
+                    <a href="?buscar={{ buscar|urlencode }}&page={{ maestros.previous_page_number }}">Anterior</a>
+                {% endif %}
+
+                <span>
+                    Página {{ maestros.number }} de {{ maestros.paginator.num_pages }}
+                </span>
+
+                {% if maestros.has_next %}
+                    <a href="?buscar={{ buscar|urlencode }}&page={{ maestros.next_page_number }}">Siguiente</a>
+                    <a href="?buscar={{ buscar|urlencode }}&page={{ maestros.paginator.num_pages }}">Última</a>
+                {% endif %}
+            </div>
+
+        </section>
+    </main>
+
+</body>
+</html>

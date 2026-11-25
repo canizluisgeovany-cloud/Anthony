@@ -1,0 +1,127 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>INTECAP | Alumnos</title>
+    <link rel="stylesheet" href="{% static 'css/alumnos.css' %}">
+</head>
+<body>
+
+    <aside class="sidebar">
+        <h2>INTECAP</h2>
+        <p>Sistema de Gestión</p>
+
+        <nav>
+            <a href="{% url 'dashboard' %}">Dashboard</a>
+            <a href="{% url 'alumno_lista' %}" class="active">Alumnos</a>
+            <a href="{% url 'maestro_lista' %}">Maestros</a>
+            <a href="{% url 'personal_lista' %}">Personal</a>
+            <a href="{% url 'aula_lista' %}">Aulas</a>
+            <a href="{% url 'curso_lista' %}">Cursos</a>
+            <a href="{% url 'inscripcion_lista' %}" class="active">Inscripciones</a>
+            <a href="{% url 'asistencia_lista' %}" class="active">Asistencia</a>
+        </nav>
+
+        <form method="POST" action="{% url 'logout' %}">
+            {% csrf_token %}
+            <button type="submit">Cerrar sesión</button>
+        </form>
+    </aside>
+
+    <main class="content">
+        <header>
+            <div>
+                <h1>Gestión de Alumnos</h1>
+                <p>Administra los estudiantes de INTECAP.</p>
+            </div>
+
+            <a href="{% url 'alumno_crear' %}" class="btn-add">
+                + Nuevo alumno
+            </a>
+        </header>
+
+        <section class="table-container">
+
+            <form method="GET" class="search">
+                <input
+                    type="text"
+                    name="buscar"
+                    placeholder="Buscar alumno..."
+                    value="{{ buscar }}"
+                >
+                <button type="submit">Buscar</button>
+                <a href="{% url 'alumno_lista' %}">Limpiar</a>
+            </form>
+
+            <div class="table-scroll">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Código</th>
+                            <th>Nombres</th>
+                            <th>Apellidos</th>
+                            <th>Teléfono</th>
+                            <th>Correo</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for alumno in alumnos %}
+                        <tr>
+                            <td>{{ alumno.codigo }}</td>
+                            <td>{{ alumno.nombres }}</td>
+                            <td>{{ alumno.apellidos }}</td>
+                            <td>{{ alumno.telefono|default:"-" }}</td>
+                            <td>{{ alumno.correo|default:"-" }}</td>
+                            <td>
+                                {% if alumno.activo %}
+                                    <span class="estado">Activo</span>
+                                {% else %}
+                                    Inactivo
+                                {% endif %}
+                            </td>
+                            <td class="acciones">
+                                <a href="{% url 'alumno_editar' alumno.pk %}">
+                                    Editar
+                                </a>
+
+                                <a class="delete" href="{% url 'alumno_eliminar' alumno.pk %}">
+                                    Eliminar
+                                </a>
+                            </td>
+                        </tr>
+
+                        {% empty %}
+                        <tr>
+                            <td colspan="7">No hay alumnos registrados.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="pagination">
+                {% if alumnos.has_previous %}
+                    <a href="?buscar={{ buscar|urlencode }}&page=1">Primera</a>
+                    <a href="?buscar={{ buscar|urlencode }}&page={{ alumnos.previous_page_number }}">Anterior</a>
+                {% endif %}
+
+                <span>
+                    Página {{ alumnos.number }} de {{ alumnos.paginator.num_pages }}
+                </span>
+
+                {% if alumnos.has_next %}
+                    <a href="?buscar={{ buscar|urlencode }}&page={{ alumnos.next_page_number }}">Siguiente</a>
+                    <a href="?buscar={{ buscar|urlencode }}&page={{ alumnos.paginator.num_pages }}">Última</a>
+                {% endif %}
+            </div>
+
+        </section>
+    </main>
+
+</body>
+</html>
